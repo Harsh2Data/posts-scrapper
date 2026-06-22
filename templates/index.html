@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Lead Extractor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>LinkedIn Lead Extractor</h1>
+    <p class="subtitle">
+      Finds IT Staffing / Vendor Collaboration / Bench Sales leads on LinkedIn
+      and exports them to Excel.
+    </p>
+
+    <form id="loginForm">
+      <label for="email">LinkedIn Email</label>
+      <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="username">
+
+      <label for="password">LinkedIn Password</label>
+      <input type="password" id="password" name="password" required placeholder="••••••••" autocomplete="current-password">
+
+      <button type="submit" id="startBtn">Start Extraction</button>
+    </form>
+
+    <p class="note">
+      Your credentials are used only for this run and are never stored or saved.
+      A Chrome window will open on this computer — if LinkedIn shows a security
+      check, complete it there and the run will continue automatically.
+    </p>
+
+    <div id="statusPanel" class="hidden">
+      <h2>
+        <span id="statusSpinner" class="spinner"></span>
+        <span id="statusTitle">Running…</span>
+      </h2>
+      <div id="log" class="log"></div>
+
+      <div id="downloads" class="downloads hidden">
+        <a id="downloadMaster" href="/api/download/master" class="btn">Download Master Excel (all leads)</a>
+        <a id="downloadDaily" href="/api/download/daily" class="btn secondary">Download Today's New Leads</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

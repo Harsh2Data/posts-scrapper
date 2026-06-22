@@ -1,0 +1,21 @@
+# credentials - never commit
+.env
+
+# runtime data
+seen_posts.txt
+leads_master.csv
+leads_master.xlsx
+daily_leads_*.xlsx
+report_*.txt
+inbox/
+debug/
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
