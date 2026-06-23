@@ -24,8 +24,9 @@ from datetime import date
 from pathlib import Path
 
 # ── config ────────────────────────────────────────────────────────────────────
-INBOX     = Path("inbox")
-SEEN_FILE = Path("seen_posts.txt")
+DATA_DIR  = Path(os.environ.get("DATA_DIR", "."))
+INBOX     = DATA_DIR / "inbox"
+SEEN_FILE = DATA_DIR / "seen_posts.txt"
 
 KEYWORDS = [
     "vendor empanelment IT staffing",
@@ -91,16 +92,35 @@ def _make_driver():
     from selenium import webdriver
     from selenium.webdriver.chrome.options import Options
     from selenium.webdriver.chrome.service import Service
-    try:
-        from webdriver_manager.chrome import ChromeDriverManager
-        service = Service(ChromeDriverManager().install())
-    except Exception:
-        service = Service()
+
     opts = Options()
-    opts.add_argument("--start-maximized")
+    chrome_bin = os.environ.get("CHROME_BIN")
+    if chrome_bin:
+        opts.binary_location = chrome_bin
+
+    if os.environ.get("HEADLESS", "0") == "1":
+        opts.add_argument("--headless=new")
+        opts.add_argument("--no-sandbox")
+        opts.add_argument("--disable-dev-shm-usage")
+        opts.add_argument("--disable-gpu")
+        opts.add_argument("--window-size=1920,1080")
+    else:
+        opts.add_argument("--start-maximized")
+
     opts.add_argument("--disable-blink-features=AutomationControlled")
     opts.add_experimental_option("excludeSwitches", ["enable-automation"])
     opts.add_experimental_option("useAutomationExtension", False)
+
+    chromedriver_bin = os.environ.get("CHROMEDRIVER_BIN")
+    if chromedriver_bin:
+        service = Service(chromedriver_bin)
+    else:
+        try:
+            from webdriver_manager.chrome import ChromeDriverManager
+            service = Service(ChromeDriverManager().install())
+        except Exception:
+            service = Service()
+
     driver = webdriver.Chrome(service=service, options=opts)
     driver.execute_script(
         "Object.defineProperty(navigator,'webdriver',{get:()=>undefined})")

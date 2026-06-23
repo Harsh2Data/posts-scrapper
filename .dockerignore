@@ -1,0 +1,12 @@
+.git
+.env
+.env.example
+__pycache__/
+*.pyc
+inbox/
+debug/
+seen_posts.txt
+leads_master.csv
+leads_master.xlsx
+daily_leads_*.xlsx
+report_*.txt

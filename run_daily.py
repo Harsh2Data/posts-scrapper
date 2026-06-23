@@ -31,9 +31,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from linkedin_post_extractor import parse_linkedin_post  # reuse the parser
 
 # ---------- config ----------
-INBOX      = "inbox"
+DATA_DIR   = os.environ.get("DATA_DIR", ".")
+INBOX      = os.path.join(DATA_DIR, "inbox")
 PROCESSED  = os.path.join(INBOX, "processed")
-MASTER     = "leads_master.csv"
+MASTER     = os.path.join(DATA_DIR, "leads_master.csv")
 MASTER_COLS = ["Contact Person", "Company Name", "Email",
                "LinkedIn Profile", "LinkedIn Post", "Keyword", "Date"]
 
@@ -177,11 +178,11 @@ def main(status_cb=None):
         w.writeheader(); w.writerows(master)
 
     # Step 9a: master Excel — all-time accumulation, rebuilt every run
-    master_xlsx = "leads_master.xlsx"
+    master_xlsx = os.path.join(DATA_DIR, "leads_master.xlsx")
     write_xlsx(master_xlsx, master)
 
     # Step 9b: daily Excel — only today's new leads
-    daily_xlsx = f"daily_leads_{datetime.now():%Y_%m_%d}.xlsx"
+    daily_xlsx = os.path.join(DATA_DIR, f"daily_leads_{datetime.now():%Y_%m_%d}.xlsx")
     write_xlsx(daily_xlsx, todays)
 
     # Step 10: report
@@ -199,7 +200,7 @@ def main(status_cb=None):
         f"================================================\n"
     )
     emit(report)
-    with open("report_latest.txt", "w", encoding="utf-8") as f:
+    with open(os.path.join(DATA_DIR, "report_latest.txt"), "w", encoding="utf-8") as f:
         f.write(report)
     return {
         "master_xlsx": master_xlsx,

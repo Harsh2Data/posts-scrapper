@@ -23,7 +23,7 @@ from pathlib import Path
 from flask import Flask, render_template, request, jsonify, send_file, abort
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR = Path(__file__).parent
+BASE_DIR = Path(os.environ.get("DATA_DIR", Path(__file__).parent))
 
 app = Flask(__name__)
 
@@ -111,4 +111,5 @@ def download_daily():
 if __name__ == "__main__":
     print("\n  LinkedIn Lead Bot is running.")
     print("  Open http://127.0.0.1:5000 in your browser.\n")
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
